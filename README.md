@@ -6,29 +6,30 @@ This is a demo to show-case how to implement the [`geocoder` gem](https://github
 
 ## What needs to be done?
 
-### 1. Add the gem
-```ruby
-# Gemfile
-gem 'geocoder'
-```
+### Have a model that you need two columns
+  We have built the [Order model](app/models/order.rb) for that.
 
-Remember to `bundle install`.
+  * Why do we want that?
 
-### 2. Add the latitude and longitude to the model
+      So, a order is taken from a place to another place. We need the coordinates for both of them to display on a map. That's why we need both coordinates.
+    
+  * Why does that not work easily?
 
-`rails g migration AddCoordinatesToModel latitude:float longitude:float`
+    The first guess might be to do something like this:
+  
+    ```ruby
+    class Order < ApplicationRecord
+      geocoded_by :from_address, latitude: :from_address_lat, longitude: :from_address_lon
+      geocoded_by :to_address, latitude: :to_address_lat, longitude: :to_address_lon
+    end
+    ```
+    
+    The first guess might be to do something like this:
 
-Run the migration
+  > Truth be told, the best/easiest solution would have been be to have two models.
 
-`rails db:migrate`
+### Add a callback
 
-### 3. Add `geocoder` to the model
-
-```ruby
-  # In the model
-  geocoded_by :address
-  after_validation :geocode, if: :will_save_change_to_address?
-```
 
 
 And we're good to go 🤓
